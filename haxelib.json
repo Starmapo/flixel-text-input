@@ -1,0 +1,10 @@
+{
+  "name": "flixel-text-input",
+  "url" : "https://github.com/Starmapo/flixel-text-input",
+  "license": "MIT",
+  "tags": ["ui", "gui", "flixel"],
+  "description": "An improved text input object for HaxeFlixel.",
+  "version": "1.0.0",
+  "releasenote": "Initial release.",
+  "contributors": ["Starmapo"]
+}
