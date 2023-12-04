@@ -718,7 +718,7 @@ class FlxBaseTextInput extends FlxText
 		switch (key)
 		{
 			case RETURN, NUMPAD_ENTER:
-				if (textField.__textEngine.multiline)
+				if (multiline)
 				{
 					textField.__replaceSelectedText("\n", true);
 

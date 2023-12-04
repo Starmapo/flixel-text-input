@@ -1,6 +1,11 @@
 #if flixel_ui
 package flixel.addons.text;
 
+import flixel.addons.ui.FlxUI;
+import flixel.addons.ui.FlxUIInputText;
+import flixel.addons.ui.interfaces.IFlxUIWidget;
+import flixel.addons.ui.interfaces.IHasParams;
+import flixel.addons.ui.interfaces.IResizable;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -15,7 +20,7 @@ import lime.system.Clipboard;
  * 
  * **Note:** Multiline and word wrapping is disabled by default.
  */
-class FlxUITextInput extends FlxSpriteGroup
+class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFlxUIWidget implements IHasParams
 {
 	/**
 	 * Whether or not the textbox has a background.
@@ -26,6 +31,11 @@ class FlxUITextInput extends FlxSpriteGroup
 	 * The color of the background of the textbox.
 	 */
 	public var backgroundColor(default, set):FlxColor = FlxColor.WHITE;
+
+	/**
+	 * If false, this does not issue FlxUI.event() calls.
+	 */
+	public var broadcastToFlxUI:Bool;
 
 	/**
 	 * The index of the insertion point (caret) position. If no insertion point is displayed, the value is the position the insertion point
@@ -95,6 +105,11 @@ class FlxUITextInput extends FlxSpriteGroup
 	public var multiline(get, set):Bool;
 
 	/**
+	 * Required for `IFlxUIWIdget`.
+	 */
+	public var name:String;
+
+	/**
 	 * This signal is dispatched when the `Backspace` key is pressed while this object is receiving text input.
 	 */
 	public var onBackspace(get, never):FlxSignal;
@@ -133,6 +148,11 @@ class FlxUITextInput extends FlxSpriteGroup
 	 * This signal is dispatched when the text is scrolled horizontally or vertically.
 	 */
 	public var onScroll(get, never):FlxSignal;
+
+	/**
+	 * Required for `IHasParams`.
+	 */
+	public var params(default, set):Array<Dynamic>;
 
 	/**
 	 * The text being displayed.
@@ -198,6 +218,11 @@ class FlxUITextInput extends FlxSpriteGroup
 		{
 			background = true;
 		}
+
+		onEnter.add(_onEnter);
+		onDelete.add(_onDelete);
+		onBackspace.add(_onDelete);
+		onInput.add(_onInput);
 	}
 
 	override public function destroy():Void
@@ -221,6 +246,12 @@ class FlxUITextInput extends FlxSpriteGroup
 		updateSprites();
 
 		super.updateHitbox();
+	}
+
+	public function resize(w:Float, h:Float):Void
+	{
+		fieldWidth = w;
+		fieldHeight = h;
 	}
 
 	/**
@@ -260,6 +291,32 @@ class FlxUITextInput extends FlxSpriteGroup
 		else
 		{
 			tf.setPosition(x, y);
+		}
+	}
+
+	function _onDelete()
+	{
+		if (broadcastToFlxUI)
+		{
+			FlxUI.event(FlxUIInputText.DELETE_EVENT, this, text, params);
+			FlxUI.event(FlxUIInputText.CHANGE_EVENT, this, text, params);
+		}
+	}
+
+	function _onEnter()
+	{
+		if (broadcastToFlxUI)
+		{
+			FlxUI.event(FlxUIInputText.ENTER_EVENT, this, text, params);
+		}
+	}
+
+	function _onInput()
+	{
+		if (broadcastToFlxUI)
+		{
+			FlxUI.event(FlxUIInputText.INPUT_EVENT, this, text, params);
+			FlxUI.event(FlxUIInputText.CHANGE_EVENT, this, text, params);
 		}
 	}
 
@@ -431,6 +488,18 @@ class FlxUITextInput extends FlxSpriteGroup
 	function get_onScroll():FlxSignal
 	{
 		return tf.onScroll;
+	}
+
+	function set_params(p:Array<Dynamic>):Array<Dynamic>
+	{
+		params = p;
+		if (params == null)
+		{
+			params = [];
+		}
+		var namedValue:NamedString = {name: "value", value: text};
+		params.push(namedValue);
+		return p;
 	}
 
 	function get_size():Int
