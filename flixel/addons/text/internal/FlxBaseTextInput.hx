@@ -234,7 +234,7 @@ class FlxBaseTextInput extends FlxText
 	var _scrollVCounter:Float = 0;
 
 	/**
-	 * Creates a new `FlxTextInput` object.
+	 * Creates a new `FlxBaseTextInput` object.
 	 * @param x The x position of the text.
 	 * @param y The y position of the text.
 	 * @param fieldWidth The `width` of the text object. Enables `autoSize` if `<= 0`. (`height` is determined automatically).
@@ -313,7 +313,7 @@ class FlxBaseTextInput extends FlxText
 	}
 
 	/**
-	 * Adds another format to this `FlxTextInput`.
+	 * Adds another format to this `FlxBaseTextInput`.
 	 * @param format The format to be added.
 	 * @param start The start index of the string where the format will be applied.
 	 * @param end The end index of the string where the format will be applied.
@@ -1049,25 +1049,25 @@ class FlxBaseTextInput extends FlxText
 
 	override function set_borderColor(value:FlxColor):FlxColor
 	{
-		// This feature is not supported in `FlxTextInput`.
+		// This feature is not supported in `FlxBaseTextInput`.
 		return value;
 	}
 
 	override function set_borderQuality(value:Float):Float
 	{
-		// This feature is not supported in `FlxTextInput`.
+		// This feature is not supported in `FlxBaseTextInput`.
 		return value;
 	}
 
 	override function set_borderSize(value:Float):Float
 	{
-		// This feature is not supported in `FlxTextInput`.
+		// This feature is not supported in `FlxBaseTextInput`.
 		return value;
 	}
 
 	override function set_borderStyle(value:FlxTextBorderStyle):FlxTextBorderStyle
 	{
-		// This feature is not supported in `FlxTextInput`.
+		// This feature is not supported in `FlxBaseTextInput`.
 		return value;
 	}
 
@@ -1325,7 +1325,7 @@ class FlxBaseTextInput extends FlxText
 }
 
 /**
- * A custom `TextField` object with some modifications, which is used in `FlxTextInput`.
+ * A custom `TextField` object with some modifications, which is used in `FlxBaseTextInput`.
  * 
  * @author Starmapo
  */
@@ -1346,7 +1346,7 @@ class CustomTextField extends TextField
 		textParent = parent;
 		stage = FlxG.stage;
 
-		// Remove event listeners, as these are handled by `FlxTextInput`.
+		// Remove event listeners, as these are handled by `FlxBaseTextInput`.
 		removeEventListener(MouseEvent.MOUSE_DOWN, this_onMouseDown);
 		removeEventListener(FocusEvent.FOCUS_IN, this_onFocusIn);
 		removeEventListener(FocusEvent.FOCUS_OUT, this_onFocusOut);
@@ -1383,7 +1383,7 @@ class CustomTextField extends TextField
 			{
 				stage.window.textInputEnabled = true;
 
-				// Removed event listeners, as these are handled by `FlxTextInput`.
+				// Removed event listeners, as these are handled by `FlxBaseTextInput`.
 
 				__inputEnabled = true;
 				__stopCursorTimer();
