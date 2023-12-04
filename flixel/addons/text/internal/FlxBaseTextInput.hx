@@ -1346,7 +1346,7 @@ class CustomTextField extends TextField
 		textParent = parent;
 		stage = FlxG.stage;
 
-		// Remove event listeners, as these are handled by `FlxInputText`.
+		// Remove event listeners, as these are handled by `FlxTextInput`.
 		removeEventListener(MouseEvent.MOUSE_DOWN, this_onMouseDown);
 		removeEventListener(FocusEvent.FOCUS_IN, this_onFocusIn);
 		removeEventListener(FocusEvent.FOCUS_OUT, this_onFocusOut);
@@ -1383,7 +1383,7 @@ class CustomTextField extends TextField
 			{
 				stage.window.textInputEnabled = true;
 
-				// Removed event listeners, as these are handled by `FlxInputText`.
+				// Removed event listeners, as these are handled by `FlxTextInput`.
 
 				__inputEnabled = true;
 				__stopCursorTimer();
