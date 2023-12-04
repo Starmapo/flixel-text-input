@@ -19,7 +19,7 @@ import openfl.text.TextFieldType;
 
 /**
  * An extension of `FlxText` that allows the text to be selected and modified by the user.
- * This does not react to pointer input on its own; it should be extended with your own code, or simply use `FlxInputText`.
+ * This does not react to pointer input on its own; it should be extended with your own code, or simply use `FlxTextInput`.
  * 
  * @author Starmapo
  */
