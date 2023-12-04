@@ -1,6 +1,6 @@
-#if flixel_ui
 package flixel.addons.text;
 
+#if flixel_ui
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.interfaces.IFlxUIWidget;

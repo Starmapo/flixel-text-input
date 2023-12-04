@@ -1204,6 +1204,7 @@ class FlxBaseTextInput extends FlxText
 		if (textField.multiline != value)
 		{
 			textField.multiline = value;
+			wordWrap = value;
 		}
 		return value;
 	}

@@ -23,7 +23,15 @@ And more!
 
 ## Compatibility
 
-This library was tested with Haxe 4.3.3, Lime 8.1.1, OpenFL 9.3.2, and HaxeFlixel 5.5.0. Previous versions may not work properly with this library.
+### Library Versions
+
+This library has been tested with Haxe 4.3.3, Lime 8.1.1, OpenFL 9.3.2, HaxeFlixel 5.5.0, and flixel-ui 2.5.0. Previous versions may not work properly with it.
+
+### Compilation Targets
+
+This library has been tested on Windows (C++, HashLink & Neko) and HTML5.
+
+macOS and Linux haven't been tested, but they should work properly like Windows. Android & iOS haven't been tested either.
 
 ## Credits
 
