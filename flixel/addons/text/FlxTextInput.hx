@@ -4,24 +4,11 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.addons.text.internal.FlxBaseTextInput;
 import flixel.input.FlxPointer;
-import flixel.input.keyboard.FlxKey;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
 import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSignal;
-import lime.system.Clipboard;
-import lime.ui.KeyCode;
-import lime.ui.KeyModifier;
-import openfl.events.Event;
 import openfl.events.FocusEvent;
-import openfl.events.KeyboardEvent;
-import openfl.events.MouseEvent;
-import openfl.text.TextField;
-import openfl.text.TextFieldType;
 
 /**
  * An extension of `FlxText` that allows the text to be selected and modified by the user.
@@ -54,6 +41,12 @@ class FlxTextInput extends FlxBaseTextInput
 	 */
 	override public function destroy():Void
 	{
+		if (textField != null)
+		{
+			textField.removeEventListener(FocusEvent.FOCUS_IN, _onFocusIn);
+			textField.removeEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
+		}
+
 		_currentCamera = null;
 
 		super.destroy();
@@ -73,6 +66,17 @@ class FlxTextInput extends FlxBaseTextInput
 			camera = _currentCamera;
 		}
 		return super.getTextInputRect(camera, rect);
+	}
+
+	/**
+	 * Initializes the event listeners.
+	 */
+	override function initEvents()
+	{
+		textField.addEventListener(FocusEvent.FOCUS_IN, _onFocusIn);
+		textField.addEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
+
+		super.initEvents();
 	}
 
 	/**
@@ -270,6 +274,22 @@ class FlxTextInput extends FlxBaseTextInput
 		}
 	}
 	#end
+
+	/**
+	 * Event listener for the text object receiving focus.
+	 */
+	function _onFocusIn(?_):Void
+	{
+		onFocusInHandler();
+	}
+
+	/**
+	 * Event listener for the text object losing focus.
+	 */
+	function _onFocusOut(_):Void
+	{
+		onFocusOutHandler();
+	}
 
 	override function get_focus():Bool
 	{

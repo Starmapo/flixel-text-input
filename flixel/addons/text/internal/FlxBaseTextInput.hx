@@ -27,6 +27,22 @@ import openfl.text.TextFieldType;
 class FlxBaseTextInput extends FlxText
 {
 	/**
+	 * Checks whether the control key is pressed.
+	 * @param modifier The modifier to check.
+	 * @return Whether or not the control key is pressed.
+	 */
+	static inline function isModifierPressed(modifier:KeyModifier):Bool
+	{
+		#if mac
+		return modifier.metaKey;
+		#elseif js
+		return modifier.metaKey || modifier.ctrlKey;
+		#else
+		return modifier.ctrlKey && !modifier.altKey;
+		#end
+	}
+
+	/**
 	 * An integer (1-based index) that indicates the bottommost line that is currently visible in the text object.
 	 * 
 	 * All the text between the lines indicated by `scrollV` and `bottomScrollV` is currently visible in the text object.
@@ -75,14 +91,39 @@ class FlxBaseTextInput extends FlxText
 	public var multiline(get, set):Bool;
 
 	/**
+	 * This signal is dispatched when the `Backspace` key is pressed while this object is receiving text input.
+	 */
+	public var onBackspace:FlxSignal = new FlxSignal();
+
+	/**
 	 * This signal is dispatched when the text is changed by the user.
 	 */
 	public var onChange:FlxSignal = new FlxSignal();
 
 	/**
+	 * This signal is dispatched when the `Delete` key is pressed while this object is receiving text input.
+	 */
+	public var onDelete:FlxSignal = new FlxSignal();
+
+	/**
 	 * This signal is dispatched when the `Enter` key is pressed by the user while this object is receiving text input.
 	 */
 	public var onEnter:FlxSignal = new FlxSignal();
+
+	/**
+	 * This signal is dispatched when this text object gains focus.
+	 */
+	public var onFocusGained:FlxSignal = new FlxSignal();
+
+	/**
+	 * This signal is dispatched when this text object loses focus.
+	 */
+	public var onFocusLost:FlxSignal = new FlxSignal();
+
+	/**
+	 * This signal is dispatched when text is added by the user to this object.
+	 */
+	public var onInput:FlxSignal = new FlxSignal();
 
 	/**
 	 * This signal is dispatched when the text is scrolled horizontally or vertically.
@@ -231,9 +272,6 @@ class FlxBaseTextInput extends FlxText
 	{
 		if (textField != null)
 		{
-			textField.removeEventListener(FocusEvent.FOCUS_IN, _onFocusIn);
-			textField.removeEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
-
 			#if FLX_KEYBOARD
 			textField.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 			#end
@@ -246,8 +284,13 @@ class FlxBaseTextInput extends FlxText
 			}
 		}
 
+		onBackspace = cast FlxDestroyUtil.destroy(onBackspace);
 		onChange = cast FlxDestroyUtil.destroy(onChange);
+		onDelete = cast FlxDestroyUtil.destroy(onDelete);
 		onEnter = cast FlxDestroyUtil.destroy(onEnter);
+		onFocusGained = cast FlxDestroyUtil.destroy(onFocusGained);
+		onFocusLost = cast FlxDestroyUtil.destroy(onFocusLost);
+		onInput = cast FlxDestroyUtil.destroy(onInput);
 		onScroll = cast FlxDestroyUtil.destroy(onScroll);
 
 		super.destroy();
@@ -450,9 +493,6 @@ class FlxBaseTextInput extends FlxText
 	 */
 	function initEvents():Void
 	{
-		textField.addEventListener(FocusEvent.FOCUS_IN, _onFocusIn);
-		textField.addEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
-
 		#if FLX_KEYBOARD
 		textField.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 		#end
@@ -514,8 +554,9 @@ class FlxBaseTextInput extends FlxText
 
 	/**
 	 * This function handles when the text object receives focus.
+	 * @param dispatch Whether the `onFocusGained` signal will be dispatched.
 	 */
-	function onFocusInHandler():Void
+	function onFocusInHandler(dispatch:Bool = true):Void
 	{
 		if (type == INPUT && focus)
 		{
@@ -526,6 +567,11 @@ class FlxBaseTextInput extends FlxText
 		{
 			textField.__startCursorTimer();
 			_regen = true;
+		}
+
+		if (dispatch)
+		{
+			onFocusGained.dispatch();
 		}
 	}
 
@@ -545,6 +591,8 @@ class FlxBaseTextInput extends FlxText
 			textField.__dirty = true;
 			textField.__setRenderDirty();
 		}
+
+		onFocusLost.dispatch();
 	}
 
 	/**
@@ -589,6 +637,18 @@ class FlxBaseTextInput extends FlxText
 				_regen = true;
 			}
 		}
+	}
+
+	/**
+	 * This function is called after text is pasted.
+	 * @param text The text that was just pasted.
+	 */
+	function onPasteHandler(text:String)
+	{
+		textField.__replaceSelectedText(text, true);
+
+		onInput.dispatch();
+		onChangeHandler();
 	}
 
 	/**
@@ -638,7 +698,7 @@ class FlxBaseTextInput extends FlxText
 
 			if (textField.__inputEnabled)
 			{
-				_onFocusIn();
+				onFocusInHandler(false);
 
 				textField.__stopCursorTimer();
 				textField.__startCursorTimer();
@@ -655,15 +715,6 @@ class FlxBaseTextInput extends FlxText
 	 */
 	function onWindowKeyDownHandler(key:KeyCode, modifier:KeyModifier):Void
 	{
-		inline function isModifierPressed():Bool
-			#if mac
-			return modifier.metaKey;
-			#elseif js
-			return modifier.metaKey || modifier.ctrlKey;
-			#else
-			return modifier.ctrlKey && !modifier.altKey;
-			#end
-
 		switch (key)
 		{
 			case RETURN, NUMPAD_ENTER:
@@ -672,6 +723,7 @@ class FlxBaseTextInput extends FlxText
 					textField.__replaceSelectedText("\n", true);
 
 					onEnter.dispatch();
+					onInput.dispatch();
 					onChangeHandler();
 				}
 				else
@@ -694,6 +746,7 @@ class FlxBaseTextInput extends FlxText
 					replaceSelectedText("");
 					textField.__selectionIndex = caretIndex;
 
+					onBackspace.dispatch();
 					onChangeHandler();
 				}
 				else
@@ -714,6 +767,7 @@ class FlxBaseTextInput extends FlxText
 					replaceSelectedText("");
 					textField.__selectionIndex = caretIndex;
 
+					onDelete.dispatch();
 					onChangeHandler();
 				}
 				else
@@ -724,7 +778,7 @@ class FlxBaseTextInput extends FlxText
 					_regen = true;
 				}
 			case LEFT if (selectable):
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					textField.__caretBeginningOfPreviousLine();
 				}
@@ -740,7 +794,7 @@ class FlxBaseTextInput extends FlxText
 
 				setSelection(textField.__selectionIndex, caretIndex);
 			case RIGHT if (selectable):
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					textField.__caretBeginningOfNextLine();
 				}
@@ -756,7 +810,7 @@ class FlxBaseTextInput extends FlxText
 
 				setSelection(textField.__selectionIndex, caretIndex);
 			case DOWN if (selectable):
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					textField.__caretIndex = text.length;
 				}
@@ -772,7 +826,7 @@ class FlxBaseTextInput extends FlxText
 
 				setSelection(textField.__selectionIndex, caretIndex);
 			case UP if (selectable):
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					textField.__caretIndex = 0;
 				}
@@ -788,7 +842,7 @@ class FlxBaseTextInput extends FlxText
 
 				setSelection(textField.__selectionIndex, caretIndex);
 			case HOME if (selectable):
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					textField.__caretIndex = 0;
 				}
@@ -804,7 +858,7 @@ class FlxBaseTextInput extends FlxText
 
 				setSelection(textField.__selectionIndex, caretIndex);
 			case END if (selectable):
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					textField.__caretIndex = text.length;
 				}
@@ -820,7 +874,7 @@ class FlxBaseTextInput extends FlxText
 
 				setSelection(textField.__selectionIndex, caretIndex);
 			case C:
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					if (caretIndex != textField.__selectionIndex && !displayAsPassword)
 					{
@@ -828,7 +882,7 @@ class FlxBaseTextInput extends FlxText
 					}
 				}
 			case X:
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					if (caretIndex != textField.__selectionIndex && !displayAsPassword)
 					{
@@ -844,21 +898,18 @@ class FlxBaseTextInput extends FlxText
 				{
 					if (Clipboard.text != null)
 					{
-						textField.__replaceSelectedText(Clipboard.text, true);
-
-						onChangeHandler();
+						onPasteHandler(Clipboard.text);
 					}
 				}
 				else
 				{
-					// TODO: does this need to occur?
 					textField.__textEngine.textFormatRanges[textField.__textEngine.textFormatRanges.length - 1].end = text.length;
 
 					_regenFormats = _regen = true;
 				}
 			#end
 			case A if (selectable):
-				if (isModifierPressed())
+				if (isModifierPressed(modifier))
 				{
 					setSelection(0, text.length);
 				}
@@ -874,6 +925,7 @@ class FlxBaseTextInput extends FlxText
 	{
 		textField.__replaceSelectedText(value, true);
 
+		onInput.dispatch();
 		onChangeHandler();
 	}
 
@@ -948,22 +1000,6 @@ class FlxBaseTextInput extends FlxText
 		onKeyDownHandler(event);
 	}
 	#end
-
-	/**
-	 * Event listener for the text object receiving focus.
-	 */
-	function _onFocusIn(?_):Void
-	{
-		onFocusInHandler();
-	}
-
-	/**
-	 * Event listener for the text object losing focus.
-	 */
-	function _onFocusOut(_):Void
-	{
-		onFocusOutHandler();
-	}
 
 	/**
 	 * Event listener for the text object being scrolled.

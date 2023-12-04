@@ -16,6 +16,15 @@ The base text input includes:
 
 And more!
 
+## Limitations
+
+- Border styles from `FlxText` do not work
+- Caret color and width & selection color aren't changeable
+
+## Compatibility
+
+This library was tested with Haxe 4.3.3, Lime 8.1.1, OpenFL 9.3.2, and HaxeFlixel 5.5.0. Previous versions may not work properly with this library.
+
 ## Credits
 
 - Starmapo: Creator & Programmer
