@@ -1,16 +1,17 @@
 package flixel.addons.text;
 
+import flixel.group.FlxSpriteGroup;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal;
+import lime.system.Clipboard;
 #if flixel_ui
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.interfaces.IHasParams;
 import flixel.addons.ui.interfaces.IResizable;
-import flixel.group.FlxSpriteGroup;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSignal;
-import lime.system.Clipboard;
+#end
 
 /**
  * A custom version of `FlxTextInput` that implements the style of the "flixel-ui" text input.
@@ -20,7 +21,7 @@ import lime.system.Clipboard;
  * 
  * **Note:** Multiline and word wrapping is disabled by default.
  */
-class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFlxUIWidget implements IHasParams
+class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable implements IFlxUIWidget implements IHasParams #end
 {
 	/**
 	 * Whether or not the textbox has a background.
@@ -32,10 +33,12 @@ class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFl
 	 */
 	public var backgroundColor(default, set):FlxColor = FlxColor.WHITE;
 
+	#if flixel_ui
 	/**
 	 * If false, this does not issue FlxUI.event() calls.
 	 */
 	public var broadcastToFlxUI:Bool;
+	#end
 
 	/**
 	 * The index of the insertion point (caret) position. If no insertion point is displayed, the value is the position the insertion point
@@ -104,10 +107,12 @@ class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFl
 	 */
 	public var multiline(get, set):Bool;
 
+	#if flixel_ui
 	/**
 	 * Required for `IFlxUIWIdget`.
 	 */
 	public var name:String;
+	#end
 
 	/**
 	 * This signal is dispatched when the `Backspace` key is pressed while this object is receiving text input.
@@ -149,10 +154,12 @@ class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFl
 	 */
 	public var onScroll(get, never):FlxSignal;
 
+	#if flixel_ui
 	/**
 	 * Required for `IHasParams`.
 	 */
 	public var params(default, set):Array<Dynamic>;
+	#end
 
 	/**
 	 * The text being displayed.
@@ -219,10 +226,12 @@ class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFl
 			background = true;
 		}
 
+		#if flixel_ui
 		onEnter.add(_onEnter);
 		onDelete.add(_onDelete);
 		onBackspace.add(_onDelete);
 		onInput.add(_onInput);
+		#end
 	}
 
 	override public function destroy():Void
@@ -294,6 +303,7 @@ class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFl
 		}
 	}
 
+	#if flixel_ui
 	function _onDelete()
 	{
 		if (broadcastToFlxUI)
@@ -319,6 +329,7 @@ class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFl
 			FlxUI.event(FlxUIInputText.CHANGE_EVENT, this, text, params);
 		}
 	}
+	#end
 
 	function set_backgroundColor(value:Int):Int
 	{
@@ -490,6 +501,7 @@ class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFl
 		return tf.onScroll;
 	}
 
+	#if flixel_ui
 	function set_params(p:Array<Dynamic>):Array<Dynamic>
 	{
 		params = p;
@@ -501,6 +513,7 @@ class FlxUITextInput extends FlxSpriteGroup implements IResizable implements IFl
 		params.push(namedValue);
 		return p;
 	}
+	#end
 
 	function get_size():Int
 	{
@@ -673,4 +686,3 @@ enum FilterMode
 	 */
 	CUSTOM_FILTER(filter:EReg);
 }
-#end
