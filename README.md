@@ -4,7 +4,7 @@ An improved text input object for HaxeFlixel.
 
 ## How to Use
 
-Simply create a new `FlxTextInput` object and add it to your state or group:
+Simply create a new `flixel.addons.text.FlxTextInput` object and add it to your state or group:
 
 ```haxe
 var textInput = new FlxTextInput(0, 0, 150, "Hello world!");
@@ -12,13 +12,17 @@ textInput.fieldHeight = 50; // Set `fieldHeight` if you want a fixed height for 
 add(textInput);
 ```
 
-You can instead use `FlxUITextInput` for a text input that mimics the style (and some properties) of the flixel-ui text input:
+### With flixel-ui
+
+You can instead use `flixel.addons.text.ui.FlxUITextInput` for a text input that mimics the style (and some properties) of the flixel-ui text input:
 
 ```haxe
 var textInput = new FlxUITextInput(0, 0, 150, "Hello world!");
 textInput.multiline = true; // Enable this if you want the text to be multiline. You'll probably want to change `fieldHeight` as well
 add(textInput);
 ```
+
+If you want `FlxUINumericStepper` but with this text input, use `flixel.addons.text.ui.FlxUINumericStepper`.
 
 ## Features
 
