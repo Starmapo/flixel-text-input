@@ -246,6 +246,16 @@ class FlxBaseTextInput extends FlxText
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
 
+		if (text == null || text == "")
+		{
+			this.text = "";
+			text = " ";
+		}
+		else
+		{
+			this.text = text;
+		}
+
 		textField = new CustomTextField(this);
 		textField.selectable = true;
 		textField.multiline = true;
