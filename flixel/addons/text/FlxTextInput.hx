@@ -206,10 +206,11 @@ class FlxTextInput extends FlxBaseTextInput
 		var overlap = false;
 		for (camera in cameras)
 		{
-			for (touch in FlxG.touches.list)
+			for (t in FlxG.touches.list)
 			{
-				if (checkPointerOverlap(touch, camera))
+				if (checkPointerOverlap(t, camera))
 				{
+					touch = t;
 					_currentCamera = camera;
 					overlap = true;
 					break;
