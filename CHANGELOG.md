@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.1.0 - 2023-12-07
+
 ### Added
 
 - `flixel.addons.text.ui.FlxUINumericStepper`: A recreation of the "flixel-ui" numeric stepper that uses this library's text input

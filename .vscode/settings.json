@@ -1,10 +1,10 @@
 {
-	"[haxe]": {
-		"editor.formatOnSave": true,
+    "[haxe]": {
+        "editor.formatOnSave": true,
         "editor.formatOnPaste": false,
         "editor.codeActionsOnSave": {
             "source.organizeImports": "explicit"
         }
-	},
-	"haxe.enableExtendedIndentation": true
+    },
+    "haxe.enableExtendedIndentation": true
 }
