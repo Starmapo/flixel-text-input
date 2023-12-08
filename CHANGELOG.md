@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- `inputEnabled` and `keyboardEnabled` variables to `FlxBaseTextInput`
+- `mouseEnabled` and `touchEnabled` variables to `FlxTextInput`
+
 ## 1.1.0 - 2023-12-07
 
 ### Added
@@ -17,15 +22,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Moved `FlxUITextInput` to the `flixel.addons.text.ui` package.
+- Moved `FlxUITextInput` to the `flixel.addons.text.ui` package
 
 ### Fixed
 
-- Fixed a crash when text is `null` in the `FlxTextInput` constructor.
-- Fixed a bug with touch input.
+- Fixed a crash when text is `null` in the `FlxTextInput` constructor
+- Fixed a bug with touch input
 
 ## 1.0.0 - 2023-12-04
 
 ### Added
 
-- Everything (initial release).
+- Everything (initial release)
