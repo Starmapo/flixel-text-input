@@ -10,8 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `inputEnabled` and `keyboardEnabled` variables to `FlxBaseTextInput`
-- `mouseEnabled` and `touchEnabled` variables to `FlxTextInput`
+- `pointerEnabled` variable to `FlxTextInput`
+
+### Fixed
+
+- Fixed a bug in HaxeUI where the text input wouldn't gain focus if its background was pressed
 
 ## 1.1.0 - 2023-12-07
 

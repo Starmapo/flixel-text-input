@@ -45,6 +45,11 @@ class FlxTextInput extends FlxBaseTextInput
 	var _currentCamera:FlxCamera;
 
 	/**
+	 * Helper variable for knowing if focus has been gained this frame through code.
+	 */
+	var _justGainedFocus:Bool = false;
+
+	/**
 	 * Clean up memory.
 	 */
 	override public function destroy():Void
@@ -85,6 +90,16 @@ class FlxTextInput extends FlxBaseTextInput
 		textField.addEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
 
 		super.initEvents();
+	}
+
+	override function update(elapsed:Float):Void
+	{
+		super.update(elapsed);
+
+		if (_justGainedFocus)
+		{
+			_justGainedFocus = false;
+		}
 	}
 
 	/**
@@ -171,7 +186,7 @@ class FlxTextInput extends FlxBaseTextInput
 
 				input = true;
 			}
-			else if (selectable || type == INPUT)
+			else if ((selectable || type == INPUT) && !_justGainedFocus)
 			{
 				focus = false;
 			}
@@ -251,7 +266,7 @@ class FlxTextInput extends FlxBaseTextInput
 
 				input = true;
 			}
-			else if (selectable || type == INPUT)
+			else if ((selectable || type == INPUT) && !_justGainedFocus)
 			{
 				focus = false;
 			}
@@ -325,10 +340,14 @@ class FlxTextInput extends FlxBaseTextInput
 			}
 
 			FlxG.stage.focus = textField;
+
+			_justGainedFocus = true;
 		}
 		else if (focus)
 		{
 			FlxG.stage.focus = null;
+
+			_justGainedFocus = false;
 		}
 		return value;
 	}
