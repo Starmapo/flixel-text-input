@@ -26,25 +26,17 @@ class FlxTextInput extends FlxBaseTextInput
 
 	#if FLX_MOUSE
 	/**
-	 * Specifies whether the text object responds to mouse input.
-	 * 
-	 * Has no effect if `inputEnabled` is set to `false`.
-	 */
-	public var mouseEnabled:Bool = true;
-
-	/**
 	 * A Boolean value that indicates whether this text object is scrolled when the user rolls the mouse wheel on it.
 	 */
 	public var mouseWheelEnabled:Bool = true;
 	#end
 
-	#if FLX_TOUCH
+	#if FLX_POINTER_INPUT
 	/**
-	 * Specifies whether the text object responds to touch input.
-	 * 
-	 * Has no effect if `inputEnabled` is set to `false`.
+	 * Specifies whether the text object responds to pointer (mouse & touch) input. Disabling this will also prevent the mouse wheel from
+	 * affecting this text object.
 	 */
-	public var touchEnabled:Bool = true;
+	public var pointerEnabled:Bool = true;
 	#end
 
 	/**
@@ -153,7 +145,7 @@ class FlxTextInput extends FlxBaseTextInput
 		var input = false;
 
 		#if FLX_MOUSE
-		if (!mouseEnabled)
+		if (!pointerEnabled)
 		{
 			return input;
 		}
@@ -223,7 +215,7 @@ class FlxTextInput extends FlxBaseTextInput
 		var input = false;
 
 		#if FLX_TOUCH
-		if (!touchEnabled)
+		if (!pointerEnabled)
 		{
 			return input;
 		}

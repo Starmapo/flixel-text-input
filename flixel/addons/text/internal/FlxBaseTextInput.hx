@@ -67,18 +67,6 @@ class FlxBaseTextInput extends FlxText
 	public var focus(get, set):Bool;
 
 	/**
-	 * Specifies whether the text object responds to any input, including pointer and keyboard input.
-	 */
-	public var inputEnabled(default, set):Bool = true;
-
-	/**
-	 * Specifies whether the text object responds to keyboard input.
-	 * 
-	 * Has no effect if `inputEnabled` is set to `false`.
-	 */
-	 public var keyboardEnabled:Bool = true;
-
-	/**
 	 * The maximum number of characters that the text object can contain, as entered by a user. A script can insert more text than `maxChars`
 	 * allows; the `maxChars` property indicates only how much text a user can enter.
 	 */
@@ -322,7 +310,7 @@ class FlxBaseTextInput extends FlxText
 	{
 		super.update(elapsed);
 
-		if (visible && inputEnabled)
+		if (visible)
 		{
 			updateInput(elapsed);
 		}
@@ -737,11 +725,6 @@ class FlxBaseTextInput extends FlxText
 	 */
 	function onWindowKeyDownHandler(key:KeyCode, modifier:KeyModifier):Void
 	{
-		if (!inputEnabled || !keyboardEnabled)
-		{
-			return;
-		}
-
 		switch (key)
 		{
 			case RETURN, NUMPAD_ENTER:
@@ -950,11 +933,6 @@ class FlxBaseTextInput extends FlxText
 	 */
 	function onWindowTextInputHandler(value:String):Void
 	{
-		if (!inputEnabled || !keyboardEnabled)
-		{
-			return;
-		}
-
 		textField.__replaceSelectedText(value, true);
 
 		onInput.dispatch();
@@ -1015,11 +993,6 @@ class FlxBaseTextInput extends FlxText
 	 */
 	function onKeyDownHandler(event:KeyboardEvent):Void
 	{
-		if (!inputEnabled || !keyboardEnabled)
-		{
-			return;
-		}
-
 		if (focus && selectable && type != INPUT && event.keyCode == FlxKey.C && (event.commandKey || event.ctrlKey))
 		{
 			if (caretIndex != textField.__selectionIndex && !displayAsPassword)
@@ -1203,16 +1176,6 @@ class FlxBaseTextInput extends FlxText
 
 	function set_focus(value:Bool):Bool
 	{
-		return value;
-	}
-
-	function set_inputEnabled(value:Bool):Bool
-	{
-		inputEnabled = value;
-		if (!value && focus)
-		{
-			_down = focus = false;
-		}
 		return value;
 	}
 
