@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `pointerEnabled` variable to `FlxTextInput`
 
+### Removed
+
+- `flixel.addons.text.FlxUITextInput` (deprecated class)
+
 ### Fixed
 
 - Fixed a bug in HaxeUI where the text input wouldn't gain focus if its background was pressed
