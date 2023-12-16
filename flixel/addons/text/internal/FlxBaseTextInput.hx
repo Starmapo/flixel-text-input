@@ -14,8 +14,10 @@ import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
+import openfl.text.TextFormat;
 
 /**
  * An extension of `FlxText` that allows the text to be selected and modified by the user.
@@ -348,6 +350,7 @@ class FlxBaseTextInput extends FlxText
 		return this;
 	}
 
+	#if (lime >= "8.0.0")
 	/**
 	 * Calculates the `textInputRect` for this object, which is used to indicate where the text input is on-screen, to avoid blocking it
 	 * with device elements.
@@ -385,6 +388,7 @@ class FlxBaseTextInput extends FlxText
 
 		return rect;
 	}
+	#end
 
 	/**
 	 * Replaces the current selection with the contents of the `value` parameter. The text is inserted at the position of the current
@@ -421,64 +425,14 @@ class FlxBaseTextInput extends FlxText
 		_regen = true;
 	}
 
-	override function regenGraphic():Void
+	override function applyFormats(formatAdjusted:TextFormat, useBorderColor:Bool = false):Void
 	{
-		// Edited to remove drawing borders, and to regenerate formats the new way.
-		if (textField == null || !_regen)
-			return;
-
-		var oldWidth:Int = 0;
-		var oldHeight:Int = FlxText.VERTICAL_GUTTER;
-
-		if (graphic != null)
+		// Edited to only re-apply formats if it's needed.
+		if (_regenFormats)
 		{
-			oldWidth = graphic.width;
-			oldHeight = graphic.height;
+			super.applyFormats(formatAdjusted, useBorderColor);
+			_regenFormats = false;
 		}
-
-		final newWidth:Int = Math.ceil(textField.width);
-		final textfieldHeight = _autoHeight ? textField.textHeight : textField.height;
-		final vertGutter = _autoHeight ? FlxText.VERTICAL_GUTTER : 0;
-		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter;
-
-		if (textField.textHeight == 0)
-		{
-			newHeight = oldHeight;
-		}
-
-		if (oldWidth != newWidth || oldHeight != newHeight)
-		{
-			final key:String = FlxG.bitmap.getUniqueKey("text");
-			makeGraphic(newWidth, newHeight, FlxColor.TRANSPARENT, false, key);
-
-			if (_autoHeight)
-				textField.height = newHeight;
-
-			_flashRect.x = 0;
-			_flashRect.y = 0;
-			_flashRect.width = newWidth;
-			_flashRect.height = newHeight;
-		}
-		else
-		{
-			graphic.bitmap.fillRect(_flashRect, FlxColor.TRANSPARENT);
-		}
-
-		if (textField != null && textField.text != null)
-		{
-			_matrix.identity();
-
-			if (_regenFormats)
-			{
-				applyFormats(_formatAdjusted, false);
-				_regenFormats = false;
-			}
-
-			drawTextFieldTo(graphic.bitmap);
-		}
-
-		_regen = false;
-		resetFrame();
 	}
 
 	/**
@@ -1365,40 +1319,23 @@ class CustomTextField extends TextField
 		removeEventListener(MouseEvent.DOUBLE_CLICK, this_onDoubleClick);
 	}
 
+	#if (lime >= "8.0.0")
+	override function getBounds(targetCoordinateSpace:openfl.display.DisplayObject):Rectangle
+	{
+		// Edited to return the bounds of the `FlxBaseTextInput` object, used for setting the window's `textInputRect`.
+		final rect = textParent.getTextInputRect();
+		final bounds = new Rectangle(rect.x, rect.y, rect.width, rect.height);
+		rect.put();
+		return bounds;
+	}
+	#end
+
 	override function __enableInput():Void
 	{
-		if (stage != null)
-		{
-			// Edited to fix `textInputRect` not being set correctly.
-			final rect = textParent.getTextInputRect();
-			if (rect != null)
-			{
-				#if openfl_dpi_aware
-				var scale = stage.window.scale;
-				if (scale != 1.0)
-				{
-					rect.x /= scale;
-					rect.y /= scale;
-					rect.width /= scale;
-					rect.height /= scale;
-				}
-				#end
-				stage.window.setTextInputRect(new lime.math.Rectangle(rect.x, rect.y, rect.width, rect.height));
-				rect.put();
-			}
+		super.__enableInput();
 
-			stage.window.textInputEnabled = true;
-
-			if (!__inputEnabled)
-			{
-				stage.window.textInputEnabled = true;
-
-				// Removed event listeners, as these are handled by `FlxBaseTextInput`.
-
-				__inputEnabled = true;
-				__stopCursorTimer();
-				__startCursorTimer();
-			}
-		}
+		// Edited to remove event listeners, as these are handled by `FlxBaseTextInput`.
+		stage.window.onTextInput.remove(window_onTextInput);
+		stage.window.onKeyDown.remove(window_onKeyDown);
 	}
 }

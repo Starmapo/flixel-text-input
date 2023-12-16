@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed a bug in HaxeUI where the text input wouldn't gain focus if its background was pressed
+- Fixed compatibility issues with flixel 4.11.0 and lime 7.9.0
 
 ## 1.1.0 - 2023-12-07
 

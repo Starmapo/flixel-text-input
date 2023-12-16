@@ -104,6 +104,7 @@ class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable 
 	 */
 	public var fieldBorderThickness(default, set):Int = 1;
 
+	#if (flixel >= "5.4.0")
 	/**
 	 * The height of `TextField` object used for bitmap generation for the text object.
 	 * Use it when you want to change the visible height of the text. Enables "auto height" if `<= 0`.
@@ -111,6 +112,7 @@ class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable 
 	 * **NOTE:** Fixed height has no effect if `autoSize = true`.
 	 */
 	public var fieldHeight(get, set):Float;
+	#end
 
 	/**
 	 * The width of the `TextField` object used for bitmap generation for the text object.
@@ -302,7 +304,12 @@ class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable 
 	public function resize(w:Float, h:Float):Void
 	{
 		fieldWidth = w;
+		#if (flixel >= "5.4.0")
 		fieldHeight = h;
+		#else
+		tf.height = h;
+		updateSprites();
+		#end
 	}
 
 	/**
@@ -419,6 +426,7 @@ class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable 
 		return fieldBorderThickness;
 	}
 
+	#if (flixel >= "5.4.0")
 	function get_fieldHeight():Float
 	{
 		return tf.fieldHeight;
@@ -430,6 +438,7 @@ class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable 
 		updateSprites();
 		return value;
 	}
+	#end
 
 	function get_fieldWidth():Float
 	{

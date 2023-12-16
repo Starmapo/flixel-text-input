@@ -65,6 +65,7 @@ class FlxTextInput extends FlxBaseTextInput
 		super.destroy();
 	}
 
+	#if (lime >= "8.0.0")
 	/**
 	 * Calculates the `textInputRect` for this object, which is used to indicate where the text input is on-screen, to avoid blocking it
 	 * with device elements.
@@ -80,6 +81,7 @@ class FlxTextInput extends FlxBaseTextInput
 		}
 		return super.getTextInputRect(camera, rect);
 	}
+	#end
 
 	/**
 	 * Initializes the event listeners.
