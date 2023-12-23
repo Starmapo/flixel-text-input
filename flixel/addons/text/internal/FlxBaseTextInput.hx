@@ -1311,12 +1311,7 @@ class CustomTextField extends TextField
 		stage = FlxG.stage;
 
 		// Remove event listeners, as these are handled by `FlxBaseTextInput`.
-		removeEventListener(MouseEvent.MOUSE_DOWN, this_onMouseDown);
-		removeEventListener(FocusEvent.FOCUS_IN, this_onFocusIn);
-		removeEventListener(FocusEvent.FOCUS_OUT, this_onFocusOut);
-		removeEventListener(KeyboardEvent.KEY_DOWN, this_onKeyDown);
-		removeEventListener(MouseEvent.MOUSE_WHEEL, this_onMouseWheel);
-		removeEventListener(MouseEvent.DOUBLE_CLICK, this_onDoubleClick);
+		__removeAllListeners();
 	}
 
 	#if (lime >= "8.0.0")

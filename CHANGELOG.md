@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `pointerEnabled` variable to `FlxTextInput`
 
+### Changed
+
+- Set Dead Code Elimination to "full" in sample projects
+- Internal: Simplified removing event listeners in `CustomTextField`
+
 ### Removed
 
 - `flixel.addons.text.FlxUITextInput` (deprecated class)
