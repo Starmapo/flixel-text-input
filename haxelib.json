@@ -4,7 +4,7 @@
   "license": "MIT",
   "tags": ["ui", "gui", "flixel"],
   "description": "An improved text input object for HaxeFlixel.",
-  "version": "1.1.0",
-  "releasenote": "Added `FlxUINumericStepper` and sample projects.",
+  "version": "2.0.0",
+  "releasenote": "Added `pointerEnabled` variable, removed deprecated `FlxUITextInput`, & fixed some bugs.",
   "contributors": ["Starmapo"]
 }
