@@ -1,6 +1,6 @@
-#if flixel_ui
 package flixel.addons.text.ui;
 
+#if flixel_ui
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIAssets;
