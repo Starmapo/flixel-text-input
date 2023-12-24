@@ -63,3 +63,5 @@ macOS and Linux haven't been tested, but they should work properly like Windows.
 
 - Starmapo: Creator & Programmer
 - The OpenFL Team: Original text input system
+
+You can view the full list of contributors [here](https://github.com/Starmapo/flixel-text-input/graphs/contributors).
