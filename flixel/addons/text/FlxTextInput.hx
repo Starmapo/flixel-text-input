@@ -7,8 +7,6 @@ import flixel.input.FlxPointer;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.text.FlxText;
-import openfl.events.FocusEvent;
 
 /**
  * An extension of `FlxText` that allows the text to be selected and modified by the user.
@@ -54,12 +52,6 @@ class FlxTextInput extends FlxBaseTextInput
 	 */
 	override public function destroy():Void
 	{
-		if (textField != null)
-		{
-			textField.removeEventListener(FocusEvent.FOCUS_IN, _onFocusIn);
-			textField.removeEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
-		}
-
 		_currentCamera = null;
 
 		super.destroy();
@@ -82,17 +74,6 @@ class FlxTextInput extends FlxBaseTextInput
 		return super.getTextInputRect(camera, rect);
 	}
 	#end
-
-	/**
-	 * Initializes the event listeners.
-	 */
-	override function initEvents()
-	{
-		textField.addEventListener(FocusEvent.FOCUS_IN, _onFocusIn);
-		textField.addEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
-
-		super.initEvents();
-	}
 
 	override function update(elapsed:Float):Void
 	{
@@ -311,46 +292,15 @@ class FlxTextInput extends FlxBaseTextInput
 	}
 	#end
 
-	/**
-	 * Event listener for the text object receiving focus.
-	 */
-	function _onFocusIn(?_):Void
-	{
-		onFocusInHandler();
-	}
-
-	/**
-	 * Event listener for the text object losing focus.
-	 */
-	function _onFocusOut(_):Void
-	{
-		onFocusOutHandler();
-	}
-
-	override function get_focus():Bool
-	{
-		return FlxG.stage.focus == textField;
-	}
-
 	override function set_focus(value:Bool):Bool
 	{
-		if (value)
+		if (value && _currentCamera == null)
 		{
-			if (_currentCamera == null)
-			{
-				_currentCamera = camera;
-			}
-
-			FlxG.stage.focus = textField;
-
-			_justGainedFocus = true;
+			_currentCamera = camera;
 		}
-		else if (focus)
-		{
-			FlxG.stage.focus = null;
 
-			_justGainedFocus = false;
-		}
-		return value;
+		_justGainedFocus = value;
+
+		return super.set_focus(value);
 	}
 }

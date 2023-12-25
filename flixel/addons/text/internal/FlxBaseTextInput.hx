@@ -13,7 +13,6 @@ import lime.ui.KeyModifier;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
-import openfl.events.MouseEvent;
 import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
@@ -284,6 +283,9 @@ class FlxBaseTextInput extends FlxText
 	{
 		if (textField != null)
 		{
+			textField.removeEventListener(FocusEvent.FOCUS_IN, _onFocusIn);
+			textField.removeEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
+
 			#if FLX_KEYBOARD
 			textField.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 			#end
@@ -453,10 +455,30 @@ class FlxBaseTextInput extends FlxText
 	}
 
 	/**
+	 * Called internally to check if text input or caret needs to be applied.
+	 */
+	function checkForFocus():Void
+	{
+		if (type == INPUT && focus)
+		{
+			textField.__startTextInput();
+			onStartTextInput();
+		}
+		else if (type != INPUT && selectable && focus)
+		{
+			textField.__startCursorTimer();
+			_regen = true;
+		}
+	}
+
+	/**
 	 * Initializes the event listeners.
 	 */
 	function initEvents():Void
 	{
+		textField.addEventListener(FocusEvent.FOCUS_IN, _onFocusIn);
+		textField.addEventListener(FocusEvent.FOCUS_OUT, _onFocusOut);
+
 		#if FLX_KEYBOARD
 		textField.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
 		#end
@@ -518,25 +540,12 @@ class FlxBaseTextInput extends FlxText
 
 	/**
 	 * This function handles when the text object receives focus.
-	 * @param dispatch Whether the `onFocusGained` signal will be dispatched.
 	 */
-	function onFocusInHandler(dispatch:Bool = true):Void
+	function onFocusInHandler():Void
 	{
-		if (type == INPUT && focus)
-		{
-			textField.__startTextInput();
-			onStartTextInput();
-		}
-		else if (type != INPUT && selectable && focus)
-		{
-			textField.__startCursorTimer();
-			_regen = true;
-		}
+		checkForFocus();
 
-		if (dispatch)
-		{
-			onFocusGained.dispatch();
-		}
+		onFocusGained.dispatch();
 	}
 
 	/**
@@ -662,7 +671,7 @@ class FlxBaseTextInput extends FlxText
 
 			if (textField.__inputEnabled)
 			{
-				onFocusInHandler(false);
+				checkForFocus();
 
 				textField.__stopCursorTimer();
 				textField.__startCursorTimer();
@@ -966,6 +975,22 @@ class FlxBaseTextInput extends FlxText
 	#end
 
 	/**
+	 * Event listener for the text object receiving focus.
+	 */
+	function _onFocusIn(event:FocusEvent):Void
+	{
+		onFocusInHandler();
+	}
+
+	/**
+	 * Event listener for the text object losing focus.
+	 */
+	function _onFocusOut(event:FocusEvent):Void
+	{
+		onFocusOutHandler();
+	}
+
+	/**
 	 * Event listener for the text object being scrolled.
 	 */
 	function _onScroll(_):Void
@@ -1125,11 +1150,22 @@ class FlxBaseTextInput extends FlxText
 
 	function get_focus():Bool
 	{
-		return false;
+		return FlxG.stage.focus == textField;
 	}
 
 	function set_focus(value:Bool):Bool
 	{
+		if (focus != value)
+		{
+			if (value)
+			{
+				FlxG.stage.focus = textField;
+			}
+			else if (focus)
+			{
+				FlxG.stage.focus = null;
+			}
+		}
 		return value;
 	}
 
@@ -1278,7 +1314,11 @@ class FlxBaseTextInput extends FlxText
 		if (textField.type != value)
 		{
 			textField.type = value;
-			if (value != INPUT)
+			if (value == INPUT)
+			{
+				checkForFocus();
+			}
+			else
 			{
 				onStopTextInput();
 			}
