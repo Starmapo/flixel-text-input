@@ -272,7 +272,8 @@ class FlxBaseTextInput extends FlxText
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
 
-		if (text == null || text == "")
+		final textIsEmpty = (text == null || text == "");
+		if (textIsEmpty)
 		{
 			this.text = "";
 			text = " ";
@@ -297,6 +298,10 @@ class FlxBaseTextInput extends FlxText
 
 		graphic = null;
 		drawFrame();
+		if (textIsEmpty)
+		{
+			textField.text = "";
+		}
 
 		initEvents();
 	}
