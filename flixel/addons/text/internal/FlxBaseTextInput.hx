@@ -212,6 +212,11 @@ class FlxBaseTextInput extends FlxText
 	public var type(get, set):TextFieldType;
 
 	/**
+	 * The last camera that pointer input was detected on this text object.
+	 */
+	var _currentCamera:FlxCamera;
+
+	/**
 	 * Helper variable which indicates if the text object is currently being pressed on.
 	 */
 	var _down:Bool = false;
@@ -309,6 +314,8 @@ class FlxBaseTextInput extends FlxText
 		onInput = cast FlxDestroyUtil.destroy(onInput);
 		onScroll = cast FlxDestroyUtil.destroy(onScroll);
 
+		_currentCamera = null;
+
 		super.destroy();
 	}
 
@@ -366,7 +373,7 @@ class FlxBaseTextInput extends FlxText
 	{
 		if (camera == null)
 		{
-			camera = this.camera;
+			camera = _currentCamera != null ? _currentCamera : this.camera;
 		}
 		if (rect == null)
 		{
@@ -1161,6 +1168,11 @@ class FlxBaseTextInput extends FlxText
 		{
 			if (value)
 			{
+				if (_currentCamera == null)
+				{
+					_currentCamera = camera;
+				}
+
 				FlxG.stage.focus = textField;
 			}
 			else if (focus)

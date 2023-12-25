@@ -38,42 +38,9 @@ class FlxTextInput extends FlxBaseTextInput
 	#end
 
 	/**
-	 * The last camera that pointer input was detected on this text object.
-	 */
-	var _currentCamera:FlxCamera;
-
-	/**
 	 * Helper variable for knowing if focus has been gained this frame through code.
 	 */
 	var _justGainedFocus:Bool = false;
-
-	/**
-	 * Clean up memory.
-	 */
-	override public function destroy():Void
-	{
-		_currentCamera = null;
-
-		super.destroy();
-	}
-
-	#if (lime >= "8.0.0")
-	/**
-	 * Calculates the `textInputRect` for this object, which is used to indicate where the text input is on-screen, to avoid blocking it
-	 * with device elements.
-	 * @param camera Specify which camera you want. If `null`, the last camera where input was detected for this text object is used.
-	 * @param rect The optional output `FlxRect` to be returned, if `null`, a new one is created.
-	 * @return A `FlxRect` that fully contains the text object in global coordinates.
-	 */
-	override public function getTextInputRect(?camera:FlxCamera, ?rect:FlxRect):FlxRect
-	{
-		if (camera == null)
-		{
-			camera = _currentCamera;
-		}
-		return super.getTextInputRect(camera, rect);
-	}
-	#end
 
 	override function update(elapsed:Float):Void
 	{
@@ -294,11 +261,6 @@ class FlxTextInput extends FlxBaseTextInput
 
 	override function set_focus(value:Bool):Bool
 	{
-		if (value && _currentCamera == null)
-		{
-			_currentCamera = camera;
-		}
-
 		_justGainedFocus = value;
 
 		return super.set_focus(value);

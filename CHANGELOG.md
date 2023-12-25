@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Internal: Moved focus handling from `FlxTextInput` to `FlxBaseTextInput`
+- Internal: Moved focus handling and `_currentCamera` variable from `FlxTextInput` to `FlxBaseTextInput`
 - Internal: Removed `dispatch` argument from `onFocusInHandler`, use `checkForFocus` instead to check for focus without dispatching `onFocusGained`
 
 ### Fixed
