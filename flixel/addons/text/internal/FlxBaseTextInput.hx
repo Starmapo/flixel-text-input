@@ -10,6 +10,7 @@ import flixel.util.FlxSignal;
 import lime.system.Clipboard;
 import lime.ui.KeyCode;
 import lime.ui.KeyModifier;
+import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
@@ -289,9 +290,7 @@ class FlxBaseTextInput extends FlxText
 
 			#if FLX_KEYBOARD
 			textField.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-			textField.removeEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
 			#end
-			textField.removeEventListener(TextEvent.TEXT_INPUT, _onTextInput);
 
 			textField.removeEventListener(Event.SCROLL, _onScroll);
 
@@ -484,9 +483,7 @@ class FlxBaseTextInput extends FlxText
 
 		#if FLX_KEYBOARD
 		textField.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-		textField.addEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
 		#end
-		textField.addEventListener(TextEvent.TEXT_INPUT, _onTextInput);
 
 		textField.addEventListener(Event.SCROLL, _onScroll);
 	}
@@ -976,18 +973,6 @@ class FlxBaseTextInput extends FlxText
 	function _onKeyDown(event:KeyboardEvent):Void
 	{
 		onKeyDownHandler(event);
-
-		// Dispatch the event for the stage, as it's only been dispatched for the text field object.
-		FlxG.stage.dispatchEvent(event);
-	}
-
-	/**
-	 * Event listener for a key being released while this text object has focus.
-	 */
-	function _onKeyUp(event:KeyboardEvent):Void
-	{
-		// Dispatch the event for the stage, as it's only been dispatched for the text field object.
-		FlxG.stage.dispatchEvent(event);
 	}
 	#end
 
@@ -1015,15 +1000,6 @@ class FlxBaseTextInput extends FlxText
 		_regen = true;
 
 		onScroll.dispatch();
-	}
-
-	/**
-	 * Event listener for text being inputted while this text object has focus.
-	 */
-	function _onTextInput(event:TextEvent)
-	{
-		// Dispatch the event for the stage, as it's only been dispatched for the text field object.
-		FlxG.stage.dispatchEvent(event);
 	}
 
 	/**
@@ -1381,7 +1357,7 @@ class CustomTextField extends TextField
 	}
 
 	#if (lime >= "8.0.0")
-	override function getBounds(targetCoordinateSpace:openfl.display.DisplayObject):Rectangle
+	override function getBounds(targetCoordinateSpace:DisplayObject):Rectangle
 	{
 		// Edited to return the bounds of the `FlxBaseTextInput` object, used for setting the window's `textInputRect`.
 		final rect = textParent.getTextInputRect();
@@ -1391,12 +1367,28 @@ class CustomTextField extends TextField
 	}
 	#end
 
-	override function __enableInput():Void
+	@:noCompletion override function __enableInput():Void
 	{
 		super.__enableInput();
 
 		// Edited to remove event listeners, as these are handled by `FlxBaseTextInput`.
 		stage.window.onTextInput.remove(window_onTextInput);
 		stage.window.onKeyDown.remove(window_onKeyDown);
+	}
+
+	@:noCompletion override function __getInteractive(stack:Array<DisplayObject>):Bool
+	{
+		// Edited to add `FlxG.game` to the stack order, allowing events to be dispatched there.
+		if (stack != null)
+		{
+			stack.push(this);
+
+			if (FlxG.game != null)
+			{
+				FlxG.game.__getInteractive(stack);
+			}
+		}
+
+		return true;
 	}
 }
