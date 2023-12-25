@@ -211,6 +211,24 @@ class FlxBaseTextInput extends FlxText
 	 */
 	public var type(get, set):TextFieldType;
 
+	#if FLX_KEYBOARD
+	/**
+	 * The previous state of the key bindings that are disabled when this starts receiving text input.
+	 */
+	var _cachedKeys:
+		{
+			#if FLX_SOUND_SYSTEM
+			volUp:Array<FlxKey>, volDown:Array<FlxKey>, mute:Array<FlxKey>,
+			#end
+			#if FLX_DEBUG
+			debug:Array<FlxKey>,
+			#end
+			#if FLX_RECORD
+			vcrCancel:Array<FlxKey>
+			#end
+		};
+	#end
+
 	/**
 	 * The last camera that pointer input was detected on this text object.
 	 */
@@ -315,6 +333,10 @@ class FlxBaseTextInput extends FlxText
 		onScroll = cast FlxDestroyUtil.destroy(onScroll);
 
 		_currentCamera = null;
+
+		#if FLX_KEYBOARD
+		_cachedKeys = null;
+		#end
 
 		super.destroy();
 	}
@@ -644,6 +666,34 @@ class FlxBaseTextInput extends FlxText
 			FlxG.stage.window.onKeyDown.add(_onWindowKeyDown);
 		}
 
+		#if FLX_KEYBOARD
+		if (_cachedKeys == null)
+		{
+			_cachedKeys = {
+				#if FLX_SOUND_SYSTEM
+				volUp: FlxG.sound.volumeUpKeys, volDown: FlxG.sound.volumeDownKeys, mute: FlxG.sound.muteKeys,
+				#end
+				#if FLX_DEBUG
+				debug: FlxG.debugger.toggleKeys,
+				#end
+				#if FLX_RECORD
+				vcrCancel: FlxG.vcr.cancelKeys
+				#end
+			}
+			#if FLX_SOUND_SYSTEM
+			FlxG.sound.volumeUpKeys = null;
+			FlxG.sound.volumeDownKeys = null;
+			FlxG.sound.muteKeys = null;
+			#end
+			#if FLX_DEBUG
+			FlxG.debugger.toggleKeys = null;
+			#end
+			#if FLX_RECORD
+			FlxG.vcr.cancelKeys = null;
+			#end
+		}
+		#end
+
 		_regen = true;
 	}
 
@@ -654,6 +704,25 @@ class FlxBaseTextInput extends FlxText
 	{
 		FlxG.stage.window.onTextInput.remove(_onWindowTextInput);
 		FlxG.stage.window.onKeyDown.remove(_onWindowKeyDown);
+
+		#if FLX_KEYBOARD
+		if (_cachedKeys != null)
+		{
+			#if FLX_SOUND_SYSTEM
+			FlxG.sound.volumeUpKeys = _cachedKeys.volUp;
+			FlxG.sound.volumeDownKeys = _cachedKeys.volDown;
+			FlxG.sound.muteKeys = _cachedKeys.mute;
+			#end
+			#if FLX_DEBUG
+			FlxG.debugger.toggleKeys = _cachedKeys.debug;
+			#end
+			#if FLX_RECORD
+			FlxG.vcr.cancelKeys = _cachedKeys.vcrCancel;
+			#end
+
+			_cachedKeys = null;
+		}
+		#end
 
 		_regen = true;
 	}
