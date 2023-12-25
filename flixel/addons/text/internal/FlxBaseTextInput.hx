@@ -13,6 +13,7 @@ import lime.ui.KeyModifier;
 import openfl.events.Event;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
+import openfl.events.TextEvent;
 import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
@@ -288,7 +289,9 @@ class FlxBaseTextInput extends FlxText
 
 			#if FLX_KEYBOARD
 			textField.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+			textField.removeEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
 			#end
+			textField.removeEventListener(TextEvent.TEXT_INPUT, _onTextInput);
 
 			textField.removeEventListener(Event.SCROLL, _onScroll);
 
@@ -481,7 +484,9 @@ class FlxBaseTextInput extends FlxText
 
 		#if FLX_KEYBOARD
 		textField.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+		textField.addEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
 		#end
+		textField.addEventListener(TextEvent.TEXT_INPUT, _onTextInput);
 
 		textField.addEventListener(Event.SCROLL, _onScroll);
 	}
@@ -966,11 +971,23 @@ class FlxBaseTextInput extends FlxText
 	}
 
 	/**
-	 * Event listener for a key being pressed.
+	 * Event listener for a key being pressed while this text object has focus.
 	 */
 	function _onKeyDown(event:KeyboardEvent):Void
 	{
 		onKeyDownHandler(event);
+
+		// Dispatch the event for the stage, as it's only been dispatched for the text field object.
+		FlxG.stage.dispatchEvent(event);
+	}
+
+	/**
+	 * Event listener for a key being released while this text object has focus.
+	 */
+	function _onKeyUp(event:KeyboardEvent):Void
+	{
+		// Dispatch the event for the stage, as it's only been dispatched for the text field object.
+		FlxG.stage.dispatchEvent(event);
 	}
 	#end
 
@@ -998,6 +1015,15 @@ class FlxBaseTextInput extends FlxText
 		_regen = true;
 
 		onScroll.dispatch();
+	}
+
+	/**
+	 * Event listener for text being inputted while this text object has focus.
+	 */
+	function _onTextInput(event:TextEvent)
+	{
+		// Dispatch the event for the stage, as it's only been dispatched for the text field object.
+		FlxG.stage.dispatchEvent(event);
 	}
 
 	/**

@@ -8,9 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Internal: Moved focus handling from `FlxTextInput` to `FlxBaseTextInput`
+- Internal: Removed `dispatch` argument from `onFocusInHandler`, use `checkForFocus` instead to check for focus without dispatching `onFocusGained`
+
 ### Fixed
 
 - Fixed `FlxUINumericStepper` having no package declared if "flixel-ui" isn't installed ([#1](https://github.com/Starmapo/flixel-text-input/pull/1))
+- OpenFL keyboard & text input events are now dispatched for the stage even if a text input has focus
 
 ## 2.0.0 - 2023-12-22
 
