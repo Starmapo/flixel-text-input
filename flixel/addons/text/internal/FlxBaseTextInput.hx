@@ -301,6 +301,7 @@ class FlxBaseTextInput extends FlxText
 		if (textIsEmpty)
 		{
 			textField.text = "";
+			_regen = true;
 		}
 
 		initEvents();
