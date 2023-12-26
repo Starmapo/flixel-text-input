@@ -10,13 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- OpenFL events dispatched for a text input with focus are now dispatched for the stage
-  - Flixel key bindings (volume up/down, debugger toggle, etc.) are now disabled while a text input has focus, since keyboard events are now dispatched for the stage
 - Internal: Moved focus handling and `_currentCamera` variable from `FlxTextInput` to `FlxBaseTextInput`
 - Internal: Removed `dispatch` argument from `onFocusInHandler`, use `checkForFocus` instead to check for focus without dispatching `onFocusGained`
 
 ### Fixed
 
+- OpenFL events dispatched for a text input with focus are now dispatched for the stage
+  - Flixel key bindings (volume up/down, debugger toggle, etc.) are now disabled while a text input has focus, since keyboard events are now dispatched for the stage
 - Fixed text input having a single empty character when passing `null` or empty text in the constructor
 - Fixed `FlxUINumericStepper` having no package declared if "flixel-ui" isn't installed ([#1](https://github.com/Starmapo/flixel-text-input/pull/1))
 
