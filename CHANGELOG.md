@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 2.0.1 - 2023-12-26
+
 ### Changed
 
 - Internal: Moved focus handling and `_currentCamera` variable from `FlxTextInput` to `FlxBaseTextInput`
