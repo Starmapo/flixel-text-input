@@ -22,30 +22,39 @@ class PlayState extends FlxState
 		final tab = new FlxUI(tabMenu);
 		tab.name = "Text Input";
 
+		final sprites:Array<flixel.FlxSprite> = [];
+
 		final textInput = new FlxUITextInput(10, 10, 150, "This is a default text input.");
+		sprites.push(textInput);
 
-		final textInput2 = new FlxUITextInput(textInput.x, textInput.y + textInput.height + 5, 150, "This is a multiline text input.");
-		textInput2.multiline = true;
-		textInput2.fieldHeight = 44;
+		#if (flixel >= "5.4.0")
+		final textInput = new FlxUITextInput(textInput.x, textInput.y + textInput.height + 5, 150, "This is a multiline text input.");
+		textInput.multiline = true;
+		textInput.resize(textInput.tf.width, 44);
+		sprites.push(textInput);
+		#end
 
-		final textInput3 = new FlxUITextInput(textInput2.x, textInput2.y + textInput2.height + 5, 150, "only lowercase letters allowed.");
-		textInput3.forceCase = LOWER_CASE;
+		final textInput = new FlxUITextInput(textInput.x, textInput.y + textInput.height + 5, 150, "only lowercase letters allowed.");
+		textInput.forceCase = LOWER_CASE;
+		sprites.push(textInput);
 
-		final textInput4 = new FlxUITextInput(textInput3.x, textInput3.y + textInput3.height + 5, 150, "ONLY UPPERCASE LETTERS ALLOWED.");
-		textInput4.forceCase = UPPER_CASE;
+		final textInput = new FlxUITextInput(textInput.x, textInput.y + textInput.height + 5, 150, "ONLY UPPERCASE LETTERS ALLOWED.");
+		textInput.forceCase = UPPER_CASE;
+		sprites.push(textInput);
 
-		final textInput5 = new FlxUITextInput(textInput4.x, textInput4.y + textInput4.height + 5, 150, "onlyLettersAllowed");
-		textInput5.filterMode = ONLY_ALPHA;
+		final textInput = new FlxUITextInput(textInput.x, textInput.y + textInput.height + 5, 150, "onlyLettersAllowed");
+		textInput.filterMode = ONLY_ALPHA;
+		sprites.push(textInput);
 
-		final textInput6 = new FlxUITextInput(textInput5.x, textInput5.y + textInput5.height + 5, 150, "1234567890");
+		final textInput6 = new FlxUITextInput(textInput.x, textInput.y + textInput.height + 5, 150, "1234567890");
 		textInput6.filterMode = ONLY_NUMERIC;
+		sprites.push(textInput);
 
-		tab.add(textInput);
-		tab.add(textInput2);
-		tab.add(textInput3);
-		tab.add(textInput4);
-		tab.add(textInput5);
-		tab.add(textInput6);
+		for (sprite in sprites)
+		{
+			tab.add(sprite);
+		}
+		sprites.resize(0);
 
 		tabMenu.addGroup(tab);
 
@@ -53,14 +62,19 @@ class PlayState extends FlxState
 		tab.name = "Numeric Stepper";
 
 		final stepper = new FlxUINumericStepper(10, 10);
+		sprites.push(stepper);
 
-		final stepper2 = new FlxUINumericStepper(stepper.x, stepper.y + stepper.height + 5, STACK_VERTICAL);
+		final stepper = new FlxUINumericStepper(stepper.x, stepper.y + stepper.height + 5, STACK_VERTICAL);
+		sprites.push(stepper);
 
-		final stepper3 = new FlxUINumericStepper(stepper.x, stepper.y + stepper.height + 5, 0.01, 0, 0, 1, 2, true);
+		final stepper = new FlxUINumericStepper(stepper.x, stepper.y + stepper.height + 5, 0.01, 0, 0, 1, 2, true);
+		sprites.push(stepper);
 
-		tab.add(stepper);
-		tab.add(stepper2);
-		tab.add(stepper3);
+		for (sprite in sprites)
+		{
+			tab.add(sprite);
+		}
+		sprites.resize(0);
 
 		tabMenu.addGroup(tab);
 

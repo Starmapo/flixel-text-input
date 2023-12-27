@@ -15,9 +15,14 @@ class PlayState extends FlxState
 		final textInput = new FlxTextInput(5, 5, 0, "This is a default text input.", 16);
 		add(textInput);
 
+		#if (flixel >= "5.4.0")
 		final textInput = new FlxTextInput(textInput.x, textInput.y + textInput.height + 5, FlxG.width - 20,
 			"This is a text input with fieldWidth and fieldHeight set.", 16);
 		textInput.fieldHeight = 44;
+		#else
+		final textInput = new FlxTextInput(textInput.x, textInput.y + textInput.height + 5, FlxG.width - 20,
+			"This is a text input with fieldWidth set.", 16);
+		#end
 		add(textInput);
 
 		final textInput = new FlxTextInput(textInput.x, textInput.y + textInput.height + 5, FlxG.width - 20, "This is a single-line text input.", 16);

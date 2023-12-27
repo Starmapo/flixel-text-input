@@ -301,15 +301,19 @@ class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable 
 		super.updateHitbox();
 	}
 
+	/**
+	 * NOTE: This sets the size of the text object, not the whole group which includes the border. Use `tf.width` or `tf.height` if you want to keep the current size.
+	 */
 	public function resize(w:Float, h:Float):Void
 	{
-		fieldWidth = w;
+		tf.fieldWidth = w;
 		#if (flixel >= "5.4.0")
-		fieldHeight = h;
+		tf.fieldHeight = h;
 		#else
 		tf.height = h;
-		updateSprites();
 		#end
+
+		updateSprites();
 	}
 
 	/**
@@ -317,10 +321,18 @@ class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable 
 	 */
 	function updateSprites()
 	{
+		#if (flixel >= "5.4.0")
+		final textWidth = tf.width;
+		final textHeight = tf.height;
+		#else
+		final textWidth = Std.int(tf.width);
+		final textHeight = Std.int(tf.height);
+		#end
+
 		if (background && fieldBorderThickness > 0)
 		{
 			fieldBorderSprite.makeGraphic(1, 1, fieldBorderColor);
-			fieldBorderSprite.setGraphicSize(tf.width + fieldBorderThickness * 2, tf.height + fieldBorderThickness * 2);
+			fieldBorderSprite.setGraphicSize(textWidth + fieldBorderThickness * 2, textHeight + fieldBorderThickness * 2);
 			fieldBorderSprite.updateHitbox();
 			fieldBorderSprite.exists = true;
 		}
@@ -332,7 +344,7 @@ class FlxUITextInput extends FlxSpriteGroup #if flixel_ui implements IResizable 
 		if (background)
 		{
 			backgroundSprite.makeGraphic(1, 1, backgroundColor);
-			backgroundSprite.setGraphicSize(tf.width, tf.height);
+			backgroundSprite.setGraphicSize(textWidth, textHeight);
 			backgroundSprite.updateHitbox();
 			backgroundSprite.setPosition(x + fieldBorderThickness, y + fieldBorderThickness);
 			backgroundSprite.exists = true;

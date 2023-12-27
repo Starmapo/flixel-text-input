@@ -51,7 +51,9 @@ Of course, you will need HaxeFlixel in your project. "flixel-ui" is optional, as
 
 ### Library Versions
 
-This library has been last tested with Haxe 4.3.3, Lime 8.1.1, OpenFL 9.3.2, HaxeFlixel 5.5.0, and flixel-ui 2.5.0. Compatibility has been tested with Lime 7.9.0, OpenFL 9.1.0, and HaxeFlixel 4.11.0.
+This library has been last tested with Haxe 4.3.3, Lime 8.1.1, OpenFL 9.3.2, HaxeFlixel 5.5.0, and flixel-ui 2.5.0. Backwards compatibility has been tested with Lime 7.9.0, OpenFL 9.1.0, HaxeFlixel 4.11.0, and flixel-ui 2.4.0.
+
+It's recommended to use HaxeFlixel 5.4.0 or above, as it allows you to set a fixed height for text objects with `fieldHeight`.
 
 ### Compilation Targets
 
