@@ -4,7 +4,7 @@
   "license": "MIT",
   "tags": ["ui", "gui", "flixel"],
   "description": "An improved text input object for HaxeFlixel.",
-  "version": "2.0.1",
-  "releasenote": "Keyboard events are now dispatched for the stage while text input is active, + other fixes.",
+  "version": "2.0.2",
+  "releasenote": "Minor bug fixes and improvements.",
   "contributors": ["Starmapo"]
 }
