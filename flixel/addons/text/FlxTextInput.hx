@@ -120,13 +120,13 @@ class FlxTextInput extends FlxBaseTextInput
 		{
 			if (checkPointerOverlap(FlxG.mouse, camera))
 			{
-				_currentCamera = camera;
+				currentCamera = camera;
 				overlap = true;
 				break;
 			}
 		}
 
-		final mousePos = getPointerPosition(FlxG.mouse, _currentCamera);
+		final mousePos = getPointerPosition(FlxG.mouse, currentCamera);
 
 		if (FlxG.mouse.justPressed)
 		{
@@ -194,7 +194,7 @@ class FlxTextInput extends FlxBaseTextInput
 				if (checkPointerOverlap(t, camera))
 				{
 					touch = t;
-					_currentCamera = camera;
+					currentCamera = camera;
 					overlap = true;
 					break;
 				}
@@ -206,7 +206,7 @@ class FlxTextInput extends FlxBaseTextInput
 			return input;
 		}
 
-		final touchPos = getPointerPosition(touch, _currentCamera);
+		final touchPos = getPointerPosition(touch, currentCamera);
 
 		if (touch.justPressed)
 		{

@@ -20,8 +20,7 @@ class PlayState extends FlxState
 			"This is a text input with fieldWidth and fieldHeight set.", 16);
 		textInput.fieldHeight = 44;
 		#else
-		final textInput = new FlxTextInput(textInput.x, textInput.y + textInput.height + 5, FlxG.width - 20,
-			"This is a text input with fieldWidth set.", 16);
+		final textInput = new FlxTextInput(textInput.x, textInput.y + textInput.height + 5, FlxG.width - 20, "This is a text input with fieldWidth set.", 16);
 		#end
 		add(textInput);
 

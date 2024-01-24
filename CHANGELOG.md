@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Slightly optimized `FlxUITextInput.resize` and added comment to clarify what it resizes
+
+### Fixed
+
+- Fixed compile errors with `FlxUITextInput` and the samples when using HaxeFlixel 5.3.1 or older
+- Fixed crash from `_currentCamera` being destroyed
+- Fixed vertical-stacked stepper not being visible in flixel-ui sample
+
 ## 2.0.1 - 2023-12-26
 
 ### Changed

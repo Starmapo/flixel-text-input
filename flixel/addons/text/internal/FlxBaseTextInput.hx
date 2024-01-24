@@ -211,6 +211,11 @@ class FlxBaseTextInput extends FlxText
 	 */
 	public var type(get, set):TextFieldType;
 
+	/**
+	 * The last camera that pointer input was detected on this text object.
+	 */
+	var currentCamera(get, set):FlxCamera;
+
 	#if FLX_KEYBOARD
 	/**
 	 * The previous state of the key bindings that are disabled when this starts receiving text input.
@@ -230,7 +235,7 @@ class FlxBaseTextInput extends FlxText
 	#end
 
 	/**
-	 * The last camera that pointer input was detected on this text object.
+	 * Internal pointer for the last camera that pointer input was detected on this text object.
 	 */
 	var _currentCamera:FlxCamera;
 
@@ -338,7 +343,7 @@ class FlxBaseTextInput extends FlxText
 		onInput = cast FlxDestroyUtil.destroy(onInput);
 		onScroll = cast FlxDestroyUtil.destroy(onScroll);
 
-		_currentCamera = null;
+		currentCamera = null;
 
 		#if FLX_KEYBOARD
 		_cachedKeys = null;
@@ -401,7 +406,7 @@ class FlxBaseTextInput extends FlxText
 	{
 		if (camera == null)
 		{
-			camera = _currentCamera != null ? _currentCamera : this.camera;
+			camera = currentCamera != null ? currentCamera : this.camera;
 		}
 		if (rect == null)
 		{
@@ -1217,6 +1222,21 @@ class FlxBaseTextInput extends FlxText
 		return value;
 	}
 
+	function get_currentCamera():FlxCamera
+	{
+		if (_currentCamera != null && !_currentCamera.exists)
+		{
+			_currentCamera = null;
+		}
+
+		return _currentCamera;
+	}
+
+	function set_currentCamera(value:FlxCamera):FlxCamera
+	{
+		return _currentCamera = value;
+	}
+
 	function get_displayAsPassword():Bool
 	{
 		return textField.displayAsPassword;
@@ -1243,11 +1263,6 @@ class FlxBaseTextInput extends FlxText
 		{
 			if (value)
 			{
-				if (_currentCamera == null)
-				{
-					_currentCamera = camera;
-				}
-
 				FlxG.stage.focus = textField;
 			}
 			else if (focus)
