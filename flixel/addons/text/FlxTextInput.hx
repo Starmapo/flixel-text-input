@@ -118,12 +118,19 @@ class FlxTextInput extends FlxBaseTextInput
 		var overlap = false;
 		for (camera in cameras)
 		{
-			if (checkPointerOverlap(FlxG.mouse, camera))
+			if (camera.exists && checkPointerOverlap(FlxG.mouse, camera))
 			{
 				_currentCamera = camera;
 				overlap = true;
 				break;
 			}
+
+			_currentCamera = null;
+		}
+
+		if (_currentCamera == null)
+		{
+			return false;
 		}
 
 		final mousePos = getPointerPosition(FlxG.mouse, _currentCamera);
