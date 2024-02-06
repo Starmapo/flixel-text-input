@@ -674,7 +674,7 @@ class FlxBaseTextInput extends FlxText
 		if (!FlxG.stage.window.onTextInput.has(_onWindowTextInput))
 		{
 			FlxG.stage.window.onTextInput.add(_onWindowTextInput);
-			FlxG.stage.window.onKeyDown.add(_onWindowKeyDown);
+			FlxG.stage.window.onKeyDown.add(_onWindowKeyDown, false, 1);
 		}
 
 		#if FLX_KEYBOARD
@@ -1097,6 +1097,12 @@ class FlxBaseTextInput extends FlxText
 	function _onWindowKeyDown(key:KeyCode, modifier:KeyModifier):Void
 	{
 		onWindowKeyDownHandler(key, modifier);
+		#if html5
+		if (key == SPACE && FlxG.keys.preventDefaultKeys.contains(SPACE))
+		{
+			onWindowTextInputHandler(" ");
+		}
+		#end
 	}
 
 	/**
